@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{25987DE6-D1D6-4752-96DC-DBFE9AC65233}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComposableCollections.AutoMapper", "ComposableCollections.AutoMapper\ComposableCollections.AutoMapper.csproj", "{42DF3370-E811-4934-B29C-CEDC7FC31E39}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25987DE6-D1D6-4752-96DC-DBFE9AC65233}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25987DE6-D1D6-4752-96DC-DBFE9AC65233}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
