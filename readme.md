@@ -1,0 +1,2 @@
+# ComposableCollections.AutoMapper
+
