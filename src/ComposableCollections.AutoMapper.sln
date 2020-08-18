@@ -1,8 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{25987DE6-D1D6-4752-96DC-DBFE9AC65233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComposableCollections.AutoMapper", "ComposableCollections.AutoMapper\ComposableCollections.AutoMapper.csproj", "{42DF3370-E811-4934-B29C-CEDC7FC31E39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComposableCollections.AutoMapper", "ComposableCollections.AutoMapper\ComposableCollections.AutoMapper.csproj", "{42DF3370-E811-4934-B29C-CEDC7FC31E39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComposableCollections.AutoMapper.Tests", "ComposableCollections.AutoMapper.Tests\ComposableCollections.AutoMapper.Tests.csproj", "{BF42E331-4FBB-4C80-9181-3B95A1D0351C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,5 +21,15 @@ Global
 		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42DF3370-E811-4934-B29C-CEDC7FC31E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF42E331-4FBB-4C80-9181-3B95A1D0351C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF42E331-4FBB-4C80-9181-3B95A1D0351C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF42E331-4FBB-4C80-9181-3B95A1D0351C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF42E331-4FBB-4C80-9181-3B95A1D0351C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0ACA15FF-0961-4EA2-9C19-B399B8A2054D}
 	EndGlobalSection
 EndGlobal
