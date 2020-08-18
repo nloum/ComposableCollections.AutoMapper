@@ -50,47 +50,37 @@ namespace ComposableCollections
         }
         
         /// <summary>
-        /// Creates a facade on top of the specified IComposableDictionary that keeps tracks of changes and occasionally
-        /// flushes them to the specified IComposableDictionary.
+        /// A facade that converts a dictionary with one type of key and value to the same type of key but a different value.
+        /// This particular extension method also avoids recreating values using a cache that can be shared between multiple
+        /// calls to WithMapping. 
         /// </summary>
-        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, Func<TValue, TKey> key, Func<TInnerValue, TKey> innerKey, IMapper mapper = null) where TValue : class
+        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, IMapper mapper = null, bool proactivelyConvertAllValues = false) where TValue : class where TInnerValue : new()
         {
             if (mapper == null)
             {
+                var valueCache = preserveReferencesState.GetCache<TInnerValue, TValue>();
+                var innerValueCache = preserveReferencesState.GetCache<TValue, TInnerValue>();
+                
                 var mapperConfig = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue, TInnerValue>()
-                        .PreserveReferences()
+                        .ConstructUsing((aggregateRoot, resolutionContext) =>
+                        {
+                            if (innerValueCache.TryGetValue(aggregateRoot, out var preExistingValue))
+                            {
+                                return preExistingValue;
+                            }
+
+                            var dbDto = new TInnerValue();
+                            innerValueCache[aggregateRoot] = dbDto;
+                            return dbDto;
+                        })
                         .ReverseMap();
                 });
                 mapper = mapperConfig.CreateMapper();
             }
 
-            return new AnonymousBulkMapDictionary<TKey, TValue, TInnerValue>(source, 
-                keyValues => mapper.Map<IEnumerable<TValue>, IEnumerable<TInnerValue>>(keyValues.Select(kvp => kvp.Value)).Select(value => new KeyValue<TKey, TInnerValue>(innerKey(value), value)),
-                keyValues => mapper.Map<IEnumerable<TInnerValue>, IEnumerable<TValue>>(keyValues.Select(kvp => kvp.Value)).Select(value => new KeyValue<TKey, TValue>(key(value), value)));
-        }
-
-        /// <summary>
-        /// Creates a facade on top of the specified IComposableDictionary that keeps tracks of changes and occasionally
-        /// flushes them to the specified IComposableDictionary. Also this caches the converted values.
-        /// </summary>
-        public static IComposableDictionary<TKey, TValue> WithCachedMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, Func<TValue, TKey> key, Func<TInnerValue, TKey> innerKey, IMapper mapper = null, IComposableDictionary<TKey, TValue> cache = null, bool proactivelyConvertAllValues = false) where TValue : class
-        {
-            if (mapper == null)
-            {
-                var mapperConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<TValue, TInnerValue>()
-                        .PreserveReferences()
-                        .ReverseMap();
-                });
-                mapper = mapperConfig.CreateMapper();
-            }
-
-            return new AnonymousCachedBulkMapDictionary<TKey, TValue, TInnerValue>(source, 
-                keyValues => mapper.Map<IEnumerable<TValue>, IEnumerable<TInnerValue>>(keyValues.Select(kvp => kvp.Value)).Select(value => new KeyValue<TKey, TInnerValue>(innerKey(value), value)),
-                keyValues => mapper.Map<IEnumerable<TInnerValue>, IEnumerable<TValue>>(keyValues.Select(kvp => kvp.Value)).Select(value => new KeyValue<TKey, TValue>(key(value), value)));
+            return new AnonymousMapDictionary<TKey, TValue, TInnerValue>(source, (id, value) => mapper.Map<TValue, TInnerValue>(value), (id, value) => mapper.Map<TInnerValue, TValue>(value));
         }
     }
 }
