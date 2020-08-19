@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using AutoMapper;
 using ComposableCollections.Dictionary;
 
@@ -9,6 +10,28 @@ namespace ComposableCollections
 {
     public static class AutoMapperExtensions
     {
+        /// <summary>
+        /// Creates an IQueryableReadOnlyDictionary that maps from the source's value to the specified value.
+        /// This uses the AutoMapper ProjectTo IQueryable extension method.
+        /// </summary>
+        public static IQueryableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(
+            this IQueryableDictionary<TKey, TInnerValue> innerValues, IConfigurationProvider configurationProvider,
+            IMapper mapper = null) where TValue : class
+        {
+            return new AutoMapperQueryableDictionary<TKey, TValue, TInnerValue>(innerValues, configurationProvider, mapper);
+        }
+        
+        /// <summary>
+        /// Creates an IQueryableReadOnlyDictionary that maps from the source's value to the specified value.
+        /// This uses the AutoMapper ProjectTo IQueryable extension method.
+        /// </summary>
+        public static IQueryableReadOnlyDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(
+            this IQueryableReadOnlyDictionary<TKey, TInnerValue> innerValues, IConfigurationProvider configurationProvider,
+            IMapper mapper = null) where TValue : class
+        {
+            return new AutoMapperQueryableReadOnlyDictionary<TKey, TValue, TInnerValue>(innerValues, configurationProvider, mapper);
+        }
+
         /// <summary>
         /// Tells AutoMapper that when mapping from a T1 to a T2, construct the T2 using a cache
         /// that is shared across multiple calls to Map.
