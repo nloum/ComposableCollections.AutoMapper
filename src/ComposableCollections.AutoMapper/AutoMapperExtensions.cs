@@ -10,6 +10,42 @@ namespace ComposableCollections
     public static class AutoMapperExtensions
     {
         /// <summary>
+        /// Tells AutoMapper that when mapping from a T1 to a T2, construct the T2 using a cache
+        /// that is shared across multiple calls to Map.
+        /// </summary>
+        public static IMappingExpression<T1, T2> ConstructUsing<T1, T2>(this IMappingExpression<T1, T2> source,
+            PreserveReferencesState preserveReferencesState, Func<T1, T2> constructor)
+        {
+            preserveReferencesState.Initialize(constructor);
+            var cache = preserveReferencesState.GetCache<T1, T2>();
+            return source.ConstructUsing(x => cache[x]);
+        }
+
+        /// <summary>
+        /// Tells AutoMapper that when mapping from a T1 to a T2, construct the T2 using a cache
+        /// that is shared across multiple calls to Map.
+        /// </summary>
+        public static IMappingExpression<T1, T2> ConstructUsing<T1, T2>(this IMappingExpression<T1, T2> source,
+            PreserveReferencesState preserveReferencesState) where T2 : new()
+        {
+            preserveReferencesState.Initialize<T1, T2>();
+            var cache = preserveReferencesState.GetCache<T1, T2>();
+            return source.ConstructUsing(x => cache[x]);
+        }
+        
+        /// <summary>
+        /// Tells AutoMapper that when mapping from a T1 to a T2, construct the T2 using a cache
+        /// that is shared across multiple calls to Map.
+        /// Assumes that a call to preserveReferencesState.Initialize{T1, T2} has already been made.
+        /// </summary>
+        public static IMappingExpression<T1, T2> ConstructUsingPreInitialized<T1, T2>(this IMappingExpression<T1, T2> source,
+            PreserveReferencesState preserveReferencesState)
+        {
+            var cache = preserveReferencesState.GetCache<T1, T2>();
+            return source.ConstructUsing(x => cache[x]);
+        }
+        
+        /// <summary>
         /// Creates a facade on top of the specified IComposableDictionary that keeps tracks of changes and occasionally
         /// flushes them to the specified IComposableDictionary.
         /// </summary>
@@ -54,24 +90,16 @@ namespace ComposableCollections
         /// This particular extension method also avoids recreating values using a cache that can be shared between multiple
         /// calls to WithMapping. 
         /// </summary>
-        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, Func<TValue, TInnerValue> innerValueFactory, Func<TInnerValue, TValue> valueFactory, IMapper mapper = null) where TValue : class
+        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, Func<TValue, TInnerValue> innerValueFactory, Func<TInnerValue, TValue> valueFactory) where TValue : class
         {
-            if (mapper == null)
+            var mapperConfig = new MapperConfiguration(cfg =>
             {
-                var valueCache = preserveReferencesState.GetCache<TInnerValue, TValue>()
-                    .WithDefaultValue(valueFactory);
-                var innerValueCache = preserveReferencesState.GetCache<TValue, TInnerValue>()
-                    .WithDefaultValue(innerValueFactory);
-                
-                var mapperConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<TValue, TInnerValue>()
-                        .ConstructUsing(aggregateRoot => innerValueCache[aggregateRoot])
-                        .ReverseMap()
-                        .ConstructUsing(dbDto => valueCache[dbDto]);
-                });
-                mapper = mapperConfig.CreateMapper();
-            }
+                cfg.CreateMap<TValue, TInnerValue>()
+                    .ConstructUsing(preserveReferencesState, innerValueFactory)
+                    .ReverseMap()
+                    .ConstructUsing(preserveReferencesState, valueFactory);
+            });
+            var mapper = mapperConfig.CreateMapper();
 
             return new AnonymousMapDictionary<TKey, TValue, TInnerValue>(source, (id, value) => mapper.Map<TValue, TInnerValue>(value), (id, value) => mapper.Map<TInnerValue, TValue>(value));
         }
@@ -81,24 +109,16 @@ namespace ComposableCollections
         /// This particular extension method also avoids recreating values using a cache that can be shared between multiple
         /// calls to WithMapping. 
         /// </summary>
-        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, Func<TValue, TInnerValue> innerValueFactory, IMapper mapper = null) where TValue : class, new()
+        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, Func<TValue, TInnerValue> innerValueFactory) where TValue : class, new()
         {
-            if (mapper == null)
+            var mapperConfig = new MapperConfiguration(cfg =>
             {
-                var valueCache = preserveReferencesState.GetCache<TInnerValue, TValue>()
-                    .WithDefaultValue(_ => new TValue());
-                var innerValueCache = preserveReferencesState.GetCache<TValue, TInnerValue>()
-                    .WithDefaultValue(innerValueFactory);
-                
-                var mapperConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<TValue, TInnerValue>()
-                        .ConstructUsing(aggregateRoot => innerValueCache[aggregateRoot])
-                        .ReverseMap()
-                        .ConstructUsing(dbDto => valueCache[dbDto]);
-                });
-                mapper = mapperConfig.CreateMapper();
-            }
+                cfg.CreateMap<TValue, TInnerValue>()
+                    .ConstructUsing(preserveReferencesState, innerValueFactory)
+                    .ReverseMap()
+                    .ConstructUsing(preserveReferencesState);
+            });
+            var mapper = mapperConfig.CreateMapper();
 
             return new AnonymousMapDictionary<TKey, TValue, TInnerValue>(source, (id, value) => mapper.Map<TValue, TInnerValue>(value), (id, value) => mapper.Map<TInnerValue, TValue>(value));
         }
@@ -108,24 +128,16 @@ namespace ComposableCollections
         /// This particular extension method also avoids recreating values using a cache that can be shared between multiple
         /// calls to WithMapping. 
         /// </summary>
-        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, Func<TInnerValue, TValue> valueFactory, IMapper mapper = null) where TValue : class where TInnerValue : new()
+        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, Func<TInnerValue, TValue> valueFactory) where TValue : class where TInnerValue : new()
         {
-            if (mapper == null)
+            var mapperConfig = new MapperConfiguration(cfg =>
             {
-                var valueCache = preserveReferencesState.GetCache<TInnerValue, TValue>()
-                    .WithDefaultValue(valueFactory);
-                var innerValueCache = preserveReferencesState.GetCache<TValue, TInnerValue>()
-                    .WithDefaultValue(_ => new TInnerValue());
-                
-                var mapperConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<TValue, TInnerValue>()
-                        .ConstructUsing(aggregateRoot => innerValueCache[aggregateRoot])
-                        .ReverseMap()
-                        .ConstructUsing(dbDto => valueCache[dbDto]);
-                });
-                mapper = mapperConfig.CreateMapper();
-            }
+                cfg.CreateMap<TValue, TInnerValue>()
+                    .ConstructUsing(preserveReferencesState)
+                    .ReverseMap()
+                    .ConstructUsing(preserveReferencesState, valueFactory);
+            });
+            var mapper = mapperConfig.CreateMapper();
 
             return new AnonymousMapDictionary<TKey, TValue, TInnerValue>(source, (id, value) => mapper.Map<TValue, TInnerValue>(value), (id, value) => mapper.Map<TInnerValue, TValue>(value));
         }
@@ -135,24 +147,16 @@ namespace ComposableCollections
         /// This particular extension method also avoids recreating values using a cache that can be shared between multiple
         /// calls to WithMapping. 
         /// </summary>
-        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState, IMapper mapper = null) where TValue : class, new() where TInnerValue : new()
+        public static IComposableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(this IComposableDictionary<TKey, TInnerValue> source, PreserveReferencesState preserveReferencesState) where TValue : class, new() where TInnerValue : new()
         {
-            if (mapper == null)
+            var mapperConfig = new MapperConfiguration(cfg =>
             {
-                var valueCache = preserveReferencesState.GetCache<TInnerValue, TValue>()
-                    .WithDefaultValue(_ => new TValue());
-                var innerValueCache = preserveReferencesState.GetCache<TValue, TInnerValue>()
-                    .WithDefaultValue(_ => new TInnerValue());
-                
-                var mapperConfig = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<TValue, TInnerValue>()
-                        .ConstructUsing(aggregateRoot => innerValueCache[aggregateRoot])
-                        .ReverseMap()
-                        .ConstructUsing(dbDto => valueCache[dbDto]);
-                });
-                mapper = mapperConfig.CreateMapper();
-            }
+                cfg.CreateMap<TValue, TInnerValue>()
+                    .ConstructUsing(preserveReferencesState)
+                    .ReverseMap()
+                    .ConstructUsing(preserveReferencesState);
+            });
+            var mapper = mapperConfig.CreateMapper();
 
             return new AnonymousMapDictionary<TKey, TValue, TInnerValue>(source, (id, value) => mapper.Map<TValue, TInnerValue>(value), (id, value) => mapper.Map<TInnerValue, TValue>(value));
         }

@@ -9,23 +9,41 @@ namespace ComposableCollections
         private IComposableDictionary<Type, object> _composableDictionaries = new ComposableDictionary<Type, object>();
         private System.Collections.Generic.List<Action> _clearActions = new System.Collections.Generic.List<Action>();
         
+        public bool Initialize<TKey, TValue>() where TValue : new() {
+            lock (_lock)
+            {
+                var key = typeof(IKeyValue<TKey, TValue>);
+                return _composableDictionaries.TryAdd(key, () =>
+                {
+                    var result = new ComposableDictionary<TKey, TValue>()
+                        .WithDefaultValue(_ => new TValue());
+                    _clearActions.Add(() => result.Clear());
+                    return result;
+                });
+            }
+        }
+        
+        public bool Initialize<TKey, TValue>(Func<TKey, TValue> constructor)
+        {
+            lock (_lock)
+            {
+                var key = typeof(IKeyValue<TKey, TValue>);
+                return _composableDictionaries.TryAdd(key, () =>
+                {
+                    var result = new ComposableDictionary<TKey, TValue>()
+                        .WithDefaultValue(constructor);
+                    _clearActions.Add(() => result.Clear());
+                    return result;
+                });
+            }
+        }
+        
         public IComposableDictionary<TKey, TValue> GetCache<TKey, TValue>()
         {
             lock (_lock)
             {
                 var key = typeof(IKeyValue<TKey, TValue>);
-                if (!_composableDictionaries.TryGetValue(key, out var result))
-                {
-                    var stronglyTypedResult = new ComposableDictionary<TKey, TValue>();
-                    _composableDictionaries.Add(key, stronglyTypedResult);
-                    _clearActions.Add(() => stronglyTypedResult.Clear());
-                    return stronglyTypedResult;
-                }
-                else
-                {
-                    var stronglyTypedResult = (IComposableDictionary<TKey, TValue>) result;
-                    return stronglyTypedResult;
-                }
+                return (IComposableDictionary<TKey, TValue>) _composableDictionaries[key];
             }
         }
 

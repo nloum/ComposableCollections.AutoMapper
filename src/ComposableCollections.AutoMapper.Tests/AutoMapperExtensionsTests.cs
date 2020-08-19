@@ -46,6 +46,9 @@ namespace ComposableCollections.AutoMapper.Tests
         public void ShouldShareInnerReferencesAcrossMultipleMappings()
         {
             var cache = new PreserveReferencesState();
+
+            cache.Initialize<Type1, Type2>();
+            cache.Initialize<Type2, Type1>();
             
             var backend1 = new ComposableDictionary<string, Type1>();
             var backend2 = new ComposableDictionary<string, Type1>();
