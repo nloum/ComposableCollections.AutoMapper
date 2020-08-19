@@ -42,7 +42,6 @@ namespace ComposableCollections.AutoMapper.Tests
             ReferenceEquals(item1_frontend1, item1_frontend2).Should().BeTrue();
         }
         
-        
         [TestMethod]
         public void ShouldShareInnerReferencesAcrossMultipleMappings()
         {
