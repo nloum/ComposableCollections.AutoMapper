@@ -3,7 +3,7 @@ using ComposableCollections.Dictionary;
 
 namespace ComposableCollections
 {
-    public class PreserveReferencesState
+    public class PreserveReferencesState : IPreserveReferencesState
     {
         private readonly object _lock = new object();
         private IComposableDictionary<Type, object> _composableDictionaries = new ComposableDictionary<Type, object>();
