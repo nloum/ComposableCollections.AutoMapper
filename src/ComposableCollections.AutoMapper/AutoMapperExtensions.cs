@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using AutoMapper;
 using ComposableCollections.Dictionary;
 
@@ -47,10 +48,10 @@ namespace ComposableCollections
         /// This uses the AutoMapper ProjectTo IQueryable extension method.
         /// </summary>
         public static IQueryableDictionary<TKey, TValue> WithMapping<TKey, TValue, TInnerValue>(
-            this IQueryableDictionary<TKey, TInnerValue> source, IConfigurationProvider configurationProvider,
-            IMapper mapper = null)
+            this IQueryableDictionary<TKey, TInnerValue> source, Func<TKey, Expression<Func<TValue, bool>>> compareId,
+            IConfigurationProvider configurationProvider, IMapper mapper = null)
         {
-            return new AutoMapperQueryableDictionary<TKey, TValue, TInnerValue>(source, configurationProvider, mapper);
+            return new AutoMapperQueryableDictionary<TKey, TValue, TInnerValue>(source, compareId, configurationProvider, mapper);
         }
         
         /// <summary>
@@ -58,11 +59,11 @@ namespace ComposableCollections
         /// This uses the AutoMapper ProjectTo IQueryable extension method.
         /// </summary>
         public static ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue>, IDisposableQueryableDictionary<TKey, TValue>> WithMapping<TKey, TValue, TInnerValue>(
-            this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TInnerValue>, IDisposableQueryableDictionary<TKey, TInnerValue>> source, IConfigurationProvider configurationProvider,
+            this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TInnerValue>, IDisposableQueryableDictionary<TKey, TInnerValue>> source, Func<TKey, Expression<Func<TValue, bool>>> compareId, IConfigurationProvider configurationProvider,
             IMapper mapper = null)
         {
             return source.Select(x => new DisposableQueryableReadOnlyDictionaryDecorator<TKey, TValue>(x.WithMapping<TKey, TValue, TInnerValue>(configurationProvider, mapper), x),
-                x => new DisposableQueryableDictionaryDecorator<TKey, TValue>(x.WithMapping<TKey, TValue, TInnerValue>(configurationProvider, mapper), x));
+                x => new DisposableQueryableDictionaryDecorator<TKey, TValue>(x.WithMapping<TKey, TValue, TInnerValue>(compareId, configurationProvider, mapper), x));
         }
         
         /// <summary>
