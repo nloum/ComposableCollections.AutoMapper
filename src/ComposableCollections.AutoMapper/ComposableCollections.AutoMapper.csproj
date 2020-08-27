@@ -6,7 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="10.0.0" />
-      <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0056" />
+      <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0073" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 using System;
 using ComposableCollections.Dictionary;
+using ComposableCollections.Dictionary.Interfaces;
+using ComposableCollections.Dictionary.Sources;
 
 namespace ComposableCollections
 {
@@ -16,7 +18,11 @@ namespace ComposableCollections
                 return _composableDictionaries.TryAdd(key, () =>
                 {
                     var result = new ComposableDictionary<TKey, TValue>()
-                        .WithDefaultValue(_ => new TValue());
+                        .WithDefaultValue(((TKey key1, out TValue value) =>
+                        {
+                            value = new TValue();
+                            return true;
+                        }));
                     _clearActions.Add(() => result.Clear());
                     return result;
                 });
@@ -31,7 +37,11 @@ namespace ComposableCollections
                 return _composableDictionaries.TryAdd(key, () =>
                 {
                     var result = new ComposableDictionary<TKey, TValue>()
-                        .WithDefaultValue(constructor);
+                        .WithDefaultValue(((TKey key1, out TValue value) =>
+                        {
+                            value = constructor(key1);
+                            return true;
+                        }));
                     _clearActions.Add(() => result.Clear());
                     return result;
                 });
