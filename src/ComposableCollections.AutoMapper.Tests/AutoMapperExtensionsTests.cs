@@ -18,6 +18,12 @@ namespace ComposableCollections.AutoMapper.Tests
         {
             public string Name { get; set; }
         }
+
+        [TestMethod]
+        public void AutoMapperQueryableDictionaryShouldAccessIndividualItemsCorrectly()
+        {
+            
+        }
         
         [TestMethod]
         public void ShouldShareReferencesAcrossMultipleMappings()

@@ -35,7 +35,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    if (iface.Contains("Queryable"))
 			    {
 				    textWriter.WriteLine(
-					    $"public static {iface}<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(this {iface}<TKey1, TValue1> source, Func<TKey2, Expression<Func<TValue2, bool>>> compareId, IConfigurationProvider configurationProvider, IMapper mapper) {{");
+					    $"public static {iface}<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(this {iface}<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id, IConfigurationProvider configurationProvider, IMapper mapper) {{");
 				    textWriter.WriteLine("if (configurationProvider == null) {");
 				    textWriter.WriteLine("configurationProvider = new MapperConfiguration(cfg => {");
 				    textWriter.WriteLine("cfg.CreateMap<TValue1, TValue2>().ReverseMap();");
@@ -68,7 +68,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    {
 				    if (iface.Contains("Queryable"))
 				    {
-					    textWriter.WriteLine("var mappedSource = new AutoMapperQueryableReadOnlyDictionary<TKey1, TValue1, TKey2, TValue2>(source, compareId, configurationProvider, mapper);");
+					    textWriter.WriteLine("var mappedSource = new AutoMapperQueryableReadOnlyDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, configurationProvider, mapper);");
 				    }
 				    else
 				    {
@@ -83,7 +83,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 				    if (iface.Contains("Queryable"))
 				    {
 					    textWriter.WriteLine(
-						    "var mappedSource = new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, compareId, configurationProvider, mapper);");
+						    "var mappedSource = new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, configurationProvider, mapper);");
 				    } else {
 					    textWriter.WriteLine(
 						    "var mappedSource = new MappingDictionaryAdapter<TKey1, TValue1, TKey2, TValue2>(source, (key, value) => new KeyValue<TKey2, TValue2>(mapper.Map<TKey1, TKey2>(key), mapper.Map<TValue1, TValue2>(value)),\n" +
@@ -137,7 +137,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    if (iface.Contains("Queryable"))
 			    {
 				    textWriter.WriteLine(
-					    $"public static {iface}<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(this {iface}<TKey, TValue1> source, Func<TKey, Expression<Func<TValue2, bool>>> compareId, IConfigurationProvider configurationProvider, IMapper mapper) {{");
+					    $"public static {iface}<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(this {iface}<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id, IConfigurationProvider configurationProvider, IMapper mapper) {{");
 				    textWriter.WriteLine("if (configurationProvider == null) {");
 				    textWriter.WriteLine("configurationProvider = new MapperConfiguration(cfg => {");
 				    textWriter.WriteLine("cfg.CreateMap<TValue1, TValue2>().ReverseMap();");
@@ -168,7 +168,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    {
 				    if (iface.Contains("Queryable"))
 				    {
-					    textWriter.WriteLine("var mappedSource = new AutoMapperQueryableReadOnlyDictionary<TKey, TValue1, TKey, TValue2>(source, compareId, configurationProvider, mapper);");
+					    textWriter.WriteLine("var mappedSource = new AutoMapperQueryableReadOnlyDictionary<TKey, TValue1, TKey, TValue2>(source, id, configurationProvider, mapper);");
 				    }
 				    else
 				    {
@@ -183,7 +183,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 				    if (iface.Contains("Queryable"))
 				    {
 					    textWriter.WriteLine(
-						    "var mappedSource = new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, compareId, configurationProvider, mapper);");
+						    "var mappedSource = new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, configurationProvider, mapper);");
 				    } else {
 					    textWriter.WriteLine(
 						    "var mappedSource = new MappingDictionaryAdapter<TKey, TValue1, TKey, TValue2>(source, (key, value) => new KeyValue<TKey, TValue2>(key, mapper.Map<TValue1, TValue2>(value)),\n" +
@@ -245,9 +245,9 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    var readWriteArguments = new List<string>();
 			    if (iface.Contains("Queryable"))
 			    {
-				    parameters.Add("Func<TKey2, Expression<Func<TValue2, bool>>> compareId");
-				    readOnlyArguments.Add("compareId");
-				    readWriteArguments.Add("compareId");
+				    parameters.Add("Expression<Func<TValue2, TKey2>> id");
+				    readOnlyArguments.Add("id");
+				    readWriteArguments.Add("id");
 				    
 				    parameters.Add("IConfigurationProvider configurationProvider");
 				    readOnlyArguments.Add("configurationProvider");
@@ -288,9 +288,9 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    var readWriteArguments = new List<string>();
 			    if (iface.Contains("Queryable"))
 			    {
-				    parameters.Add("Func<TKey, Expression<Func<TValue2, bool>>> compareId");
-				    readOnlyArguments.Add("compareId");
-				    readWriteArguments.Add("compareId");
+				    parameters.Add("Expression<Func<TValue2, TKey>> id");
+				    readOnlyArguments.Add("id");
+				    readWriteArguments.Add("id");
 				    
 				    parameters.Add("IConfigurationProvider configurationProvider");
 				    readOnlyArguments.Add("configurationProvider");
@@ -331,9 +331,9 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    var readWriteArguments = new List<string>();
 			    if (iface.Contains("Queryable"))
 			    {
-				    parameters.Add("Func<TKey2, Expression<Func<TValue2, bool>>> compareId");
-				    readOnlyArguments.Add("compareId");
-				    readWriteArguments.Add("compareId");
+				    parameters.Add("Expression<Func<TValue2, TKey2>> id");
+				    readOnlyArguments.Add("id");
+				    readWriteArguments.Add("id");
 				   
 				    parameters.Add("IConfigurationProvider configurationProvider");
 				    readOnlyArguments.Add("configurationProvider");
@@ -372,9 +372,9 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 			    var readWriteArguments = new List<string>();
 			    if (iface.Contains("Queryable"))
 			    {
-				    parameters.Add("Func<TKey, Expression<Func<TValue2, bool>>> compareId");
-				    readOnlyArguments.Add("compareId");
-				    readWriteArguments.Add("compareId");
+				    parameters.Add("Expression<Func<TValue2, TKey>> id");
+				    readOnlyArguments.Add("id");
+				    readWriteArguments.Add("id");
 				    
 				    parameters.Add("IConfigurationProvider configurationProvider");
 				    readOnlyArguments.Add("configurationProvider");
