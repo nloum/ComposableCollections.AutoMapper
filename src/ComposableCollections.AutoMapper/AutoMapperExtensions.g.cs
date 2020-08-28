@@ -78,62 +78,49 @@ namespace ComposableCollections
 
         public static ICachedDisposableQueryableDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
             this ICachedDisposableQueryableDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                     cfg.CreateMap<TKey1, TKey2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, mapper);
             var cachedMapSource = new ConcurrentCachedWriteDictionaryAdapter<TKey2, TValue2>(mappedSource);
             return new CachedDisposableQueryableDictionaryAdapter<TKey2, TValue2>(mappedSource,
                 cachedMapSource.AsBypassCache, cachedMapSource.AsNeverFlush, () =>
                 {
                     cachedMapSource.FlushCache();
                     source.FlushCache();
-                }, cachedMapSource.GetWrites, source, mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                }, cachedMapSource.GetWrites, source, mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static ICachedQueryableDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
-            this ICachedQueryableDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            this ICachedQueryableDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id, IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                     cfg.CreateMap<TKey1, TKey2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, mapper);
             var cachedMapSource = new ConcurrentCachedWriteDictionaryAdapter<TKey2, TValue2>(mappedSource);
             return new CachedQueryableDictionaryAdapter<TKey2, TValue2>(mappedSource, cachedMapSource.AsBypassCache,
                 cachedMapSource.AsNeverFlush, () =>
                 {
                     cachedMapSource.FlushCache();
                     source.FlushCache();
-                }, cachedMapSource.GetWrites, mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                }, cachedMapSource.GetWrites, mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IComposableDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
@@ -203,53 +190,42 @@ namespace ComposableCollections
 
         public static IDisposableQueryableDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
             this IDisposableQueryableDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                     cfg.CreateMap<TKey1, TKey2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, mapper);
             return new DisposableQueryableDictionaryAdapter<TKey2, TValue2>(mappedSource, source,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>
             WithMapping<TKey1, TValue1, TKey2, TValue2>(
                 this IDisposableQueryableReadOnlyDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id,
-                IConfigurationProvider configurationProvider, IMapper mapper)
+                IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                     cfg.CreateMap<TKey1, TKey2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
             var mappedSource =
-                new AutoMapperQueryableReadOnlyDictionary<TKey1, TValue1, TKey2, TValue2>(source, id,
-                    configurationProvider, mapper);
+                new AutoMapperQueryableReadOnlyDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, mapper);
             return new DisposableQueryableReadOnlyDictionaryAdapter<TKey2, TValue2>(mappedSource, source,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IDisposableReadOnlyDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
@@ -274,53 +250,41 @@ namespace ComposableCollections
         }
 
         public static IQueryableDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
-            this IQueryableDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            this IQueryableDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id, IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                     cfg.CreateMap<TKey1, TKey2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, mapper);
             return new QueryableDictionaryAdapter<TKey2, TValue2>(mappedSource,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IQueryableReadOnlyDictionary<TKey2, TValue2> WithMapping<TKey1, TValue1, TKey2, TValue2>(
             this IQueryableReadOnlyDictionary<TKey1, TValue1> source, Expression<Func<TValue2, TKey2>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                     cfg.CreateMap<TKey1, TKey2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
             var mappedSource =
-                new AutoMapperQueryableReadOnlyDictionary<TKey1, TValue1, TKey2, TValue2>(source, id,
-                    configurationProvider, mapper);
+                new AutoMapperQueryableReadOnlyDictionary<TKey1, TValue1, TKey2, TValue2>(source, id, mapper);
             return new QueryableReadOnlyDictionaryAdapter<TKey2, TValue2>(mappedSource,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         #endregion
@@ -379,60 +343,47 @@ namespace ComposableCollections
 
         public static ICachedDisposableQueryableDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
             this ICachedDisposableQueryableDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, mapper);
             var cachedMapSource = new ConcurrentCachedWriteDictionaryAdapter<TKey, TValue2>(mappedSource);
             return new CachedDisposableQueryableDictionaryAdapter<TKey, TValue2>(mappedSource,
                 cachedMapSource.AsBypassCache, cachedMapSource.AsNeverFlush, () =>
                 {
                     cachedMapSource.FlushCache();
                     source.FlushCache();
-                }, cachedMapSource.GetWrites, source, mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                }, cachedMapSource.GetWrites, source, mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static ICachedQueryableDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
-            this ICachedQueryableDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            this ICachedQueryableDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id, IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, mapper);
             var cachedMapSource = new ConcurrentCachedWriteDictionaryAdapter<TKey, TValue2>(mappedSource);
             return new CachedQueryableDictionaryAdapter<TKey, TValue2>(mappedSource, cachedMapSource.AsBypassCache,
                 cachedMapSource.AsNeverFlush, () =>
                 {
                     cachedMapSource.FlushCache();
                     source.FlushCache();
-                }, cachedMapSource.GetWrites, mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                }, cachedMapSource.GetWrites, mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IComposableDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
@@ -494,50 +445,39 @@ namespace ComposableCollections
 
         public static IDisposableQueryableDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
             this IDisposableQueryableDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, mapper);
             return new DisposableQueryableDictionaryAdapter<TKey, TValue2>(mappedSource, source,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IDisposableQueryableReadOnlyDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
             this IDisposableQueryableReadOnlyDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
             var mappedSource =
-                new AutoMapperQueryableReadOnlyDictionary<TKey, TValue1, TKey, TValue2>(source, id,
-                    configurationProvider, mapper);
+                new AutoMapperQueryableReadOnlyDictionary<TKey, TValue1, TKey, TValue2>(source, id, mapper);
             return new DisposableQueryableReadOnlyDictionaryAdapter<TKey, TValue2>(mappedSource, source,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IDisposableReadOnlyDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
@@ -560,51 +500,38 @@ namespace ComposableCollections
         }
 
         public static IQueryableDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
-            this IQueryableDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            this IQueryableDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id, IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
-            var mappedSource =
-                new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, configurationProvider,
-                    mapper);
+            var mappedSource = new AutoMapperQueryableDictionary<TKey, TValue1, TKey, TValue2>(source, id, mapper);
             return new QueryableDictionaryAdapter<TKey, TValue2>(mappedSource,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         public static IQueryableReadOnlyDictionary<TKey, TValue2> WithMapping<TKey, TValue1, TValue2>(
-            this IQueryableReadOnlyDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id,
-            IConfigurationProvider configurationProvider, IMapper mapper)
+            this IQueryableReadOnlyDictionary<TKey, TValue1> source, Expression<Func<TValue2, TKey>> id, IMapper mapper)
         {
-            if (configurationProvider == null)
+            if (mapper == null)
             {
-                configurationProvider = new MapperConfiguration(cfg =>
+                var configurationProvider = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<TValue1, TValue2>().ReverseMap();
                 });
-            }
-
-            if (mapper == null)
-            {
                 mapper = configurationProvider.CreateMapper();
             }
 
             var mappedSource =
-                new AutoMapperQueryableReadOnlyDictionary<TKey, TValue1, TKey, TValue2>(source, id,
-                    configurationProvider, mapper);
+                new AutoMapperQueryableReadOnlyDictionary<TKey, TValue1, TKey, TValue2>(source, id, mapper);
             return new QueryableReadOnlyDictionaryAdapter<TKey, TValue2>(mappedSource,
-                mapper.ProjectTo<TValue2>(source.Values, configurationProvider));
+                mapper.ProjectTo<TValue2>(source.Values));
         }
 
         #endregion
@@ -628,13 +555,12 @@ namespace ComposableCollections
                 ICachedDisposableQueryableDictionary<TKey2, TValue2>> WithMapping<TKey1, TValue1, TKey2, TValue2>(
                 this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>,
                     ICachedDisposableQueryableDictionary<TKey1, TValue1>> source, Expression<Func<TValue2, TKey2>> id,
-                IConfigurationProvider configurationProvider, IMapper mapper)
+                IMapper mapper)
         {
             return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
                 ICachedDisposableQueryableDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, configurationProvider, mapper),
-                () => source.BeginWrite()
-                    .WithMapping<TKey1, TValue1, TKey2, TValue2>(id, configurationProvider, mapper));
+                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper),
+                () => source.BeginWrite().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
         }
 
         public static
@@ -654,13 +580,12 @@ namespace ComposableCollections
                 IDisposableQueryableDictionary<TKey2, TValue2>> WithMapping<TKey1, TValue1, TKey2, TValue2>(
                 this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>,
                     IDisposableQueryableDictionary<TKey1, TValue1>> source, Expression<Func<TValue2, TKey2>> id,
-                IConfigurationProvider configurationProvider, IMapper mapper)
+                IMapper mapper)
         {
             return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
                 IDisposableQueryableDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, configurationProvider, mapper),
-                () => source.BeginWrite()
-                    .WithMapping<TKey1, TValue1, TKey2, TValue2>(id, configurationProvider, mapper));
+                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper),
+                () => source.BeginWrite().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
         }
 
         #endregion
@@ -684,12 +609,12 @@ namespace ComposableCollections
                 ICachedDisposableQueryableDictionary<TKey, TValue2>> WithMapping<TKey, TValue1, TValue2>(
                 this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>,
                     ICachedDisposableQueryableDictionary<TKey, TValue1>> source, Expression<Func<TValue2, TKey>> id,
-                IConfigurationProvider configurationProvider, IMapper mapper)
+                IMapper mapper)
         {
             return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
                 ICachedDisposableQueryableDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, configurationProvider, mapper),
-                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(id, configurationProvider, mapper));
+                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, mapper),
+                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(id, mapper));
         }
 
         public static
@@ -709,12 +634,12 @@ namespace ComposableCollections
                 IDisposableQueryableDictionary<TKey, TValue2>> WithMapping<TKey, TValue1, TValue2>(
                 this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>,
                     IDisposableQueryableDictionary<TKey, TValue1>> source, Expression<Func<TValue2, TKey>> id,
-                IConfigurationProvider configurationProvider, IMapper mapper)
+                IMapper mapper)
         {
             return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
                 IDisposableQueryableDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, configurationProvider, mapper),
-                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(id, configurationProvider, mapper));
+                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, mapper),
+                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(id, mapper));
         }
 
         #endregion
@@ -733,11 +658,10 @@ namespace ComposableCollections
         public static IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>>
             WithMapping<TKey1, TValue1, TKey2, TValue2>(
                 this IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>> source,
-                Expression<Func<TValue2, TKey2>> id, IConfigurationProvider configurationProvider, IMapper mapper)
+                Expression<Func<TValue2, TKey2>> id, IMapper mapper)
         {
             return new AnonymousReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>>(
-                () => source.BeginRead()
-                    .WithMapping<TKey1, TValue1, TKey2, TValue2>(id, configurationProvider, mapper));
+                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
         }
 
         #endregion
@@ -756,10 +680,10 @@ namespace ComposableCollections
         public static IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>>
             WithMapping<TKey, TValue1, TValue2>(
                 this IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>> source,
-                Expression<Func<TValue2, TKey>> id, IConfigurationProvider configurationProvider, IMapper mapper)
+                Expression<Func<TValue2, TKey>> id, IMapper mapper)
         {
             return new AnonymousReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, configurationProvider, mapper));
+                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, mapper));
         }
 
         #endregion

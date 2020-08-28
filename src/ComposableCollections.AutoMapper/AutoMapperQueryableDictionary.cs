@@ -23,9 +23,9 @@ namespace ComposableCollections
         private readonly Func<TKey2, Expression<Func<TValue2, bool>>> _compareKey;
         private readonly Expression<Func<TValue2, IKeyValue<TKey2, TValue2>>> _getKeyValue;
 
-        public AutoMapperQueryableDictionary(IQueryableDictionary<TKey1, TValue1> innerValues, Expression<Func<TValue2, TKey2>> getKey, IConfigurationProvider configurationProvider, IMapper mapper)
+        public AutoMapperQueryableDictionary(IQueryableDictionary<TKey1, TValue1> innerValues, Expression<Func<TValue2, TKey2>> getKey, IMapper mapper)
         {
-            _queryable = mapper.ProjectTo<TValue2>(innerValues.Values, configurationProvider);
+            _queryable = mapper.ProjectTo<TValue2>(innerValues.Values);
             _innerValues = innerValues;
             _getKey = getKey;
             _mapper = mapper;
