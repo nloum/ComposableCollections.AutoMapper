@@ -364,8 +364,8 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 		    var ioService = new IoService(new ReactiveProcessFactory());
 		    var repoRoot = ioService.CurrentDirectory.Ancestors().First(ancestor => (ancestor / ".git").IsFolder());
 
-		    var dictionaryExtensionsFilePath = repoRoot / "src" / "ComposableCollections.AutoMapper" / "AutoMapperExtensions.g.cs";
-		    using (var streamWriter = dictionaryExtensionsFilePath.OpenWriter())
+		    var autoMapperExtensionsFilePath = repoRoot / "src" / "ComposableCollections.AutoMapper" / "AutoMapperExtensions.g.cs";
+		    using (var streamWriter = autoMapperExtensionsFilePath.OpenWriter())
 		    {
 			    streamWriter.WriteLine(@"using System;
 		        using System.Collections.Generic;
@@ -385,7 +385,7 @@ namespace ComposableCollections.AutoMapper.CodeGenerator
 
 			        namespace ComposableCollections
 		        {
-        public static partial class DictionaryExtensions
+        public static partial class AutoMapperExtensions
         {");
 			    GenerateWithMappingExtensionMethods(streamWriter);
 			    streamWriter.WriteLine("}\n}");

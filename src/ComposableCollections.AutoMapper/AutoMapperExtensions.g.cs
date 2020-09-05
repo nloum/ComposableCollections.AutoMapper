@@ -16,7 +16,7 @@ using UtilityDisposables;
 
 namespace ComposableCollections
 {
-    public static partial class DictionaryExtensions
+    public static partial class AutoMapperExtensions
     {
         #region WithMapping - different key types
 

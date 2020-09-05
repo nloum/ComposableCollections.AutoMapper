@@ -5,7 +5,7 @@ using ComposableCollections.Dictionary;
 
 namespace ComposableCollections
 {
-    public static class AutoMapperExtensions
+    public static partial class AutoMapperExtensions
     {
         /// <summary>
         /// Tells AutoMapper that when mapping from a T1 to a T2, construct the T2 using a cache
