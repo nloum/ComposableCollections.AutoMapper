@@ -539,53 +539,53 @@ namespace ComposableCollections
         #region WithMapping - transactional different key types
 
         public static
-            ITransactionalCollection<IDisposableReadOnlyDictionary<TKey2, TValue2>,
-                ICachedDisposableDictionary<TKey2, TValue2>> WithMapping<TKey1, TValue1, TKey2, TValue2>(
-                this ITransactionalCollection<IDisposableReadOnlyDictionary<TKey1, TValue1>,
+            IReadWriteFactory<IDisposableReadOnlyDictionary<TKey2, TValue2>, ICachedDisposableDictionary<TKey2, TValue2>
+            > WithMapping<TKey1, TValue1, TKey2, TValue2>(
+                this IReadWriteFactory<IDisposableReadOnlyDictionary<TKey1, TValue1>,
                     ICachedDisposableDictionary<TKey1, TValue1>> source, IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableReadOnlyDictionary<TKey2, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableReadOnlyDictionary<TKey2, TValue2>,
                 ICachedDisposableDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper),
-                () => source.BeginWrite().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper));
+                () => source.CreateReader().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper),
+                () => source.CreateWriter().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper));
         }
 
         public static
-            ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
+            IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
                 ICachedDisposableQueryableDictionary<TKey2, TValue2>> WithMapping<TKey1, TValue1, TKey2, TValue2>(
-                this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>,
+                this IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>,
                     ICachedDisposableQueryableDictionary<TKey1, TValue1>> source, Expression<Func<TValue2, TKey2>> id,
                 IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
                 ICachedDisposableQueryableDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper),
-                () => source.BeginWrite().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
+                () => source.CreateReader().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper),
+                () => source.CreateWriter().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
         }
 
         public static
-            ITransactionalCollection<IDisposableReadOnlyDictionary<TKey2, TValue2>,
-                IDisposableDictionary<TKey2, TValue2>> WithMapping<TKey1, TValue1, TKey2, TValue2>(
-                this ITransactionalCollection<IDisposableReadOnlyDictionary<TKey1, TValue1>,
+            IReadWriteFactory<IDisposableReadOnlyDictionary<TKey2, TValue2>, IDisposableDictionary<TKey2, TValue2>>
+            WithMapping<TKey1, TValue1, TKey2, TValue2>(
+                this IReadWriteFactory<IDisposableReadOnlyDictionary<TKey1, TValue1>,
                     IDisposableDictionary<TKey1, TValue1>> source, IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableReadOnlyDictionary<TKey2, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableReadOnlyDictionary<TKey2, TValue2>,
                 IDisposableDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper),
-                () => source.BeginWrite().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper));
+                () => source.CreateReader().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper),
+                () => source.CreateWriter().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper));
         }
 
         public static
-            ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
+            IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
                 IDisposableQueryableDictionary<TKey2, TValue2>> WithMapping<TKey1, TValue1, TKey2, TValue2>(
-                this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>,
+                this IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>,
                     IDisposableQueryableDictionary<TKey1, TValue1>> source, Expression<Func<TValue2, TKey2>> id,
                 IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>,
                 IDisposableQueryableDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper),
-                () => source.BeginWrite().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
+                () => source.CreateReader().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper),
+                () => source.CreateWriter().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
         }
 
         #endregion
@@ -593,97 +593,95 @@ namespace ComposableCollections
         #region WithMapping - transactional same key type
 
         public static
-            ITransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue2>,
-                ICachedDisposableDictionary<TKey, TValue2>> WithMapping<TKey, TValue1, TValue2>(
-                this ITransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue1>,
+            IReadWriteFactory<IDisposableReadOnlyDictionary<TKey, TValue2>, ICachedDisposableDictionary<TKey, TValue2>>
+            WithMapping<TKey, TValue1, TValue2>(
+                this IReadWriteFactory<IDisposableReadOnlyDictionary<TKey, TValue1>,
                     ICachedDisposableDictionary<TKey, TValue1>> source, IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableReadOnlyDictionary<TKey, TValue2>,
                 ICachedDisposableDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(mapper),
-                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(mapper));
+                () => source.CreateReader().WithMapping<TKey, TValue1, TValue2>(mapper),
+                () => source.CreateWriter().WithMapping<TKey, TValue1, TValue2>(mapper));
         }
 
         public static
-            ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
+            IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
                 ICachedDisposableQueryableDictionary<TKey, TValue2>> WithMapping<TKey, TValue1, TValue2>(
-                this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>,
+                this IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>,
                     ICachedDisposableQueryableDictionary<TKey, TValue1>> source, Expression<Func<TValue2, TKey>> id,
                 IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
                 ICachedDisposableQueryableDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, mapper),
-                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(id, mapper));
+                () => source.CreateReader().WithMapping<TKey, TValue1, TValue2>(id, mapper),
+                () => source.CreateWriter().WithMapping<TKey, TValue1, TValue2>(id, mapper));
         }
 
         public static
-            ITransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue2>, IDisposableDictionary<TKey, TValue2>>
+            IReadWriteFactory<IDisposableReadOnlyDictionary<TKey, TValue2>, IDisposableDictionary<TKey, TValue2>>
             WithMapping<TKey, TValue1, TValue2>(
-                this ITransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue1>,
+                this IReadWriteFactory<IDisposableReadOnlyDictionary<TKey, TValue1>,
                     IDisposableDictionary<TKey, TValue1>> source, IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableReadOnlyDictionary<TKey, TValue2>,
                 IDisposableDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(mapper),
-                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(mapper));
+                () => source.CreateReader().WithMapping<TKey, TValue1, TValue2>(mapper),
+                () => source.CreateWriter().WithMapping<TKey, TValue1, TValue2>(mapper));
         }
 
         public static
-            ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
+            IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
                 IDisposableQueryableDictionary<TKey, TValue2>> WithMapping<TKey, TValue1, TValue2>(
-                this ITransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>,
+                this IReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>,
                     IDisposableQueryableDictionary<TKey, TValue1>> source, Expression<Func<TValue2, TKey>> id,
                 IMapper mapper)
         {
-            return new AnonymousTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
+            return new AnonymousReadWriteFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>,
                 IDisposableQueryableDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, mapper),
-                () => source.BeginWrite().WithMapping<TKey, TValue1, TValue2>(id, mapper));
+                () => source.CreateReader().WithMapping<TKey, TValue1, TValue2>(id, mapper),
+                () => source.CreateWriter().WithMapping<TKey, TValue1, TValue2>(id, mapper));
         }
 
         #endregion
 
         #region WithMapping - read-only transactional different key types
 
-        public static IReadOnlyTransactionalCollection<IDisposableReadOnlyDictionary<TKey2, TValue2>>
+        public static IReadOnlyFactory<IDisposableReadOnlyDictionary<TKey2, TValue2>>
             WithMapping<TKey1, TValue1, TKey2, TValue2>(
-                this IReadOnlyTransactionalCollection<IDisposableReadOnlyDictionary<TKey1, TValue1>> source,
-                IMapper mapper)
+                this IReadOnlyFactory<IDisposableReadOnlyDictionary<TKey1, TValue1>> source, IMapper mapper)
         {
-            return new AnonymousReadOnlyTransactionalCollection<IDisposableReadOnlyDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper));
+            return new AnonymousReadOnlyFactory<IDisposableReadOnlyDictionary<TKey2, TValue2>>(
+                () => source.CreateReader().WithMapping<TKey1, TValue1, TKey2, TValue2>(mapper));
         }
 
-        public static IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>>
+        public static IReadOnlyFactory<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>>
             WithMapping<TKey1, TValue1, TKey2, TValue2>(
-                this IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>> source,
+                this IReadOnlyFactory<IDisposableQueryableReadOnlyDictionary<TKey1, TValue1>> source,
                 Expression<Func<TValue2, TKey2>> id, IMapper mapper)
         {
-            return new AnonymousReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
+            return new AnonymousReadOnlyFactory<IDisposableQueryableReadOnlyDictionary<TKey2, TValue2>>(
+                () => source.CreateReader().WithMapping<TKey1, TValue1, TKey2, TValue2>(id, mapper));
         }
 
         #endregion
 
         #region WithMapping - read-only transactional same key type
 
-        public static IReadOnlyTransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue2>>
+        public static IReadOnlyFactory<IDisposableReadOnlyDictionary<TKey, TValue2>>
             WithMapping<TKey, TValue1, TValue2>(
-                this IReadOnlyTransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue1>> source,
-                IMapper mapper)
+                this IReadOnlyFactory<IDisposableReadOnlyDictionary<TKey, TValue1>> source, IMapper mapper)
         {
-            return new AnonymousReadOnlyTransactionalCollection<IDisposableReadOnlyDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(mapper));
+            return new AnonymousReadOnlyFactory<IDisposableReadOnlyDictionary<TKey, TValue2>>(
+                () => source.CreateReader().WithMapping<TKey, TValue1, TValue2>(mapper));
         }
 
-        public static IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>>
+        public static IReadOnlyFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>>
             WithMapping<TKey, TValue1, TValue2>(
-                this IReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>> source,
+                this IReadOnlyFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue1>> source,
                 Expression<Func<TValue2, TKey>> id, IMapper mapper)
         {
-            return new AnonymousReadOnlyTransactionalCollection<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>>(
-                () => source.BeginRead().WithMapping<TKey, TValue1, TValue2>(id, mapper));
+            return new AnonymousReadOnlyFactory<IDisposableQueryableReadOnlyDictionary<TKey, TValue2>>(
+                () => source.CreateReader().WithMapping<TKey, TValue1, TValue2>(id, mapper));
         }
 
         #endregion
