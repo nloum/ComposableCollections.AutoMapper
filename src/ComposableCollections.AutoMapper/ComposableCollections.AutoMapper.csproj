@@ -2,11 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <AdditionalFileItemNames>FluentApiSourceGenerator.xml</AdditionalFileItemNames>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="10.0.0" />
-      <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0090" />
+      <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0128" />
+      <PackageReference Include="FluentSourceGenerators" Version="1.0.0-alpha0007" />
     </ItemGroup>
 
 </Project>
