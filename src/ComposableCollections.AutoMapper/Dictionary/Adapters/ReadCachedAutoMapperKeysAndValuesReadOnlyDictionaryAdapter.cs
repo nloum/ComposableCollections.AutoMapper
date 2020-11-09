@@ -6,7 +6,8 @@ namespace ComposableCollections.AutoMapper.Dictionary.Adapters
 {
     public class
         ReadCachedAutoMapperKeysAndValuesReadOnlyDictionaryAdapter<TSourceKey, TSourceValue, TKey, TValue> :
-            ReadCachedMappingKeysAndValuesReadOnlyDictionaryAdapter<TSourceKey, TSourceValue, TKey, TValue>
+            ReadCachedMappingKeysAndValuesReadOnlyDictionaryAdapter<TSourceKey, TSourceValue, TKey, TValue>,
+            IComposableReadOnlyDictionary<TKey, TValue>
     {
         private readonly IReadCachedReadOnlyDictionary<TSourceKey, TSourceValue> _innerValues;
         private readonly IMapper _mapper;

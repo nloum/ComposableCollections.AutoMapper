@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComposableCollections.AutoM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComposableCollections.AutoMapper.CodeGenerator", "ComposableCollections.AutoMapper.CodeGenerator\ComposableCollections.AutoMapper.CodeGenerator.csproj", "{119EDAC7-E8C7-4676-9B97-7BA8873285FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentSourceGenerators", "..\..\FluentSourceGenerators\src\FluentSourceGenerators\FluentSourceGenerators.csproj", "{C70EB6FD-025A-4840-AD42-D22E1B9CC257}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{BF42E331-4FBB-4C80-9181-3B95A1D0351C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{119EDAC7-E8C7-4676-9B97-7BA8873285FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{119EDAC7-E8C7-4676-9B97-7BA8873285FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70EB6FD-025A-4840-AD42-D22E1B9CC257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70EB6FD-025A-4840-AD42-D22E1B9CC257}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70EB6FD-025A-4840-AD42-D22E1B9CC257}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70EB6FD-025A-4840-AD42-D22E1B9CC257}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

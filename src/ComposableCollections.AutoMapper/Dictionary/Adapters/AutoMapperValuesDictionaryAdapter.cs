@@ -9,7 +9,7 @@ namespace ComposableCollections.AutoMapper.Dictionary.Adapters
     /// IDictionaryEx{TKey, TValue} instance. This will lazily convert objects in the underlying innerValues.
     /// This class works whether innerValues changes underneath it or not.
     /// </summary>
-    public class AutoMapperValuesDictionaryAdapter<TKey, TSourceValue, TValue> : MappingValuesDictionaryAdapter<TKey, TSourceValue, TValue>
+    public class AutoMapperValuesDictionaryAdapter<TKey, TSourceValue, TValue> : MappingValuesDictionaryAdapter<TKey, TSourceValue, TValue>, IComposableDictionary<TKey, TValue>
     {
         public AutoMapperValuesDictionaryAdapter(IComposableDictionary<TKey, TSourceValue> innerValues, IMapper mapper) : base(innerValues, mapper.Map<TSourceValue, TValue>, mapper.Map<TValue, TSourceValue>)
         {

@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <FluentApiSourceGenerator>
   <CodeGenerators>
-    <SubclassCombinationImplementations Namespace="ComposableCollections.AutoMapper" BaseClass="AutoMapper"
-                                        Folder="Dictionary/Decorators">
-      <ClassNameModifiers>
-        <ClassNameModifier Search="Dictionary" Replace="GetOrDefaultDictionaryDecorator" />
-      </ClassNameModifiers>
-    </SubclassCombinationImplementations>
     <ConstructorExtensionMethods Namespace="ComposableCollections" ExtensionMethodName="WithMapping">
       <BaseClasses>
         <BaseClass>QueryableAutoMapperKeysAndValuesDictionaryAdapter</BaseClass>
