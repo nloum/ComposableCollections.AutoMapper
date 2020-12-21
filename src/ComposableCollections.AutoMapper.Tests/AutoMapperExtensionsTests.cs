@@ -44,8 +44,8 @@ namespace ComposableCollections.AutoMapper.Tests
             backend1.Add("item1", item1);
             backend2.Add("item1", item1);
             
-            var frontend1 = backend1.WithMapping<string, Type1, Type2>(mapper);
-            var frontend2 = backend2.WithMapping<string, Type1, Type2>(mapper);
+            var frontend1 = backend1.WithAutoMapping<string, Type1, Type2>(mapper);
+            var frontend2 = backend2.WithAutoMapping<string, Type1, Type2>(mapper);
 
             frontend1.TryGetValue("item1", out var item1_frontend1).Should().BeTrue();
             item1_frontend1.Name.Should().Be("item1");
@@ -77,8 +77,8 @@ namespace ComposableCollections.AutoMapper.Tests
             var backend1 = new ComposableDictionary<string, Type1>();
             var backend2 = new ComposableDictionary<string, Type1>();
             
-            var frontend1 = backend1.WithMapping<string, Type1, Type2>(mapper);
-            var frontend2 = backend2.WithMapping<string, Type1, Type2>(mapper);
+            var frontend1 = backend1.WithAutoMapping<string, Type1, Type2>(mapper);
+            var frontend2 = backend2.WithAutoMapping<string, Type1, Type2>(mapper);
 
             var item1 = new Type2() { Name = "item1" };
             frontend1.Add("item1", item1);
