@@ -148,7 +148,7 @@ class Build : NukeBuild
 
     Target Coverage => _ => _
         .DependsOn(Test)
-        .TriggeredBy(Test)
+        //.TriggeredBy(Test)
         .Consumes(Test)
         //.Produces(CoverageReportArchive)
         .Executes(() =>
@@ -157,7 +157,7 @@ class Build : NukeBuild
 	        //var settings = new GitVersionSettings().SetToolPath( package.Directory / "tools/netcoreapp3.1/any/gitversion.dll");
 
 	        ReportGenerator(_ => _
-	            .SetToolPath(package.Directory / "tools/netcoreapp3.1/any/reportgenerator.dll")
+	            .SetProcessToolPath(package.Directory / "tools/netcoreapp3.1/any/reportgenerator.dll")
                 .SetReports(TestResultDirectory / "*.xml")
                 .SetReportTypes(ReportTypes.HtmlInline)
                 .SetTargetDirectory(CoverageReportDirectory)
@@ -214,7 +214,7 @@ class Build : NukeBuild
 	    get
 	    {
 		    var package = NuGetPackageResolver.GetGlobalInstalledPackage("GitVersion.Tool", "5.3.3", null);
-		    var settings = new GitVersionSettings().SetToolPath(package.Directory / "tools/netcoreapp3.1/any/gitversion.dll");
+		    var settings = new GitVersionSettings().SetProcessToolPath(package.Directory / "tools/netcoreapp3.1/any/gitversion.dll");
 		    var gitVersion = GitVersionTasks.GitVersion(settings).Result;
 		    return gitVersion;
 	    }
