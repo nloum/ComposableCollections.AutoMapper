@@ -10,9 +10,4 @@
         <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0148" />
         <PackageReference Include="FluentSourceGenerators" Version="1.0.0-alpha0007" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\FluentSourceGenerators\src\FluentSourceGenerators\FluentSourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    </ItemGroup>
-
 </Project>
