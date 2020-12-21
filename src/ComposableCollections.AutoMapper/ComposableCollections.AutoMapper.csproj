@@ -6,9 +6,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="10.1.1" />
-      <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0148" />
-<!--      <PackageReference Include="FluentSourceGenerators" Version="1.0.0-alpha0007" />-->
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="ComposableCollections" Version="1.0.0-alpha0148" />
+        <PackageReference Include="FluentSourceGenerators" Version="1.0.0-alpha0007" />
     </ItemGroup>
 
     <ItemGroup>
